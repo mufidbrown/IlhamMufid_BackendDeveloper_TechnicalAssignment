@@ -1,0 +1,4 @@
+package com.mufid.service.province;
+
+public interface ProvinceService {
+}

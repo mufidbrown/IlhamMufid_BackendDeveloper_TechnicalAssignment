@@ -1,0 +1,69 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mtdb
+    username: postgres
+    password: bismillah
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+#  mail:
+#    host: smtp.gmail.com
+#    port: 587
+#    username: ilhammufid@students.amikom.ac.id
+#    password: dsbm ndce uaqc exop
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
+
+server:
+  port: 8089
+  compression:
+    enabled: true
+    mime-types: text/html, text/xml, text/plain, text/css, text/javascript, application/javascript, application/json, application/xml
+    min-response-size: 2KB
+  http2:
+    enabled: true
+  server-header: MuFID
+  servlet:
+    session:
+      timeout: 30m
+
+logging:
+  file:
+    name: log/app.log
+  level:
+    ROOT: INFO
+    org:
+      com.app: INFO
+    com:
+      zaxxer:
+        hikari.HikariConfig: DEBUG
+
+#app:
+#  scheduler_bootstrap: false
+#  parameter:
+#    UPLOAD_PATH: D:/work/product/uploads/
+#    CACHE_PATH: D:/work/product/cache/
+#    CAPTCHA_ENABLE: false
+#    IS_SECURITY_ENABLE: false
+
+#  security:
+#    jwt:
+#      secret: MufidJwtSecretKey1234567890987654321 # ≥32 karakter
+#      expiration: 3600000 # 1 jam dalam ms
+#      refresh-expiration: 86400000 # 1 hari dalam ms
+
+application:
+  url: http://localhost:8089

@@ -1,0 +1,143 @@
+package com.mufid.dto.store;
+
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class StoreResponse {
+    private Integer id;
+    private String name;
+    private String code;
+    private String address;
+    private String phone;
+    private String managerName;
+    private Boolean isWhitelist;
+    private Integer branchId;
+    private String branchName;
+    private Integer provinceId;
+    private String provinceName;
+    private Boolean isActive;
+
+
+    public StoreResponse(Integer id, String name, String code, String address,
+                         String phone, String managerName, Boolean isWhitelist,
+                         Integer branchId, String branchName, String provinceName, Boolean isActive) {
+        this.id = id;
+        this.name = name;
+        this.code = code;
+        this.address = address;
+        this.phone = phone;
+        this.managerName = managerName;
+        this.isWhitelist = isWhitelist;
+        this.branchId = branchId;
+        this.branchName = branchName;
+        this.provinceName = provinceName;
+        this.isActive = isActive;
+    }
+
+    public Boolean getWhitelist() {
+        return isWhitelist;
+    }
+
+    public void setWhitelist(Boolean whitelist) {
+        isWhitelist = whitelist;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getManagerName() {
+        return managerName;
+    }
+
+    public void setManagerName(String managerName) {
+        this.managerName = managerName;
+    }
+
+    public Boolean getIsWhitelist() {
+        return isWhitelist;
+    }
+
+    public void setIsWhitelist(Boolean isWhitelist) {
+        this.isWhitelist = isWhitelist;
+    }
+
+    public Integer getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(Integer branchId) {
+        this.branchId = branchId;
+    }
+
+    public String getBranchName() {
+        return branchName;
+    }
+
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
+    }
+
+    public Integer getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(Integer provinceId) {
+        this.provinceId = provinceId;
+    }
+
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
+}

@@ -1,0 +1,4 @@
+package com.mufid.repository;
+
+public interface StoreRepository {
+}

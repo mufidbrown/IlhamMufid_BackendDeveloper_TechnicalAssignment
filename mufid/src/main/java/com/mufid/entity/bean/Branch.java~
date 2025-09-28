@@ -1,0 +1,4 @@
+package com.mufid.entity.bean;
+
+public class Branch {
+}

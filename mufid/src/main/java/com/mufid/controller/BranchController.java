@@ -1,0 +1,52 @@
+package com.mufid.controller;
+
+import com.mufid.base.ApiResponse;
+import com.mufid.shared.constant.MessageConstant;
+import com.mufid.dto.branch.BranchRequest;
+import com.mufid.dto.branch.BranchResponse;
+import com.mufid.service.branch.BranchService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/branches")
+public class BranchController {
+
+    private final BranchService branchService;
+
+    public BranchController(BranchService branchService) {
+        this.branchService = branchService;
+    }
+
+    @PostMapping
+    public ResponseEntity<ApiResponse> create(@RequestBody BranchRequest request) {
+        BranchResponse response = branchService.create(request);
+        return ResponseEntity.ok(ApiResponse.success(MessageConstant.SUCCESS_CREATED, response));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse> update(@PathVariable Integer id, @RequestBody BranchRequest request) {
+        BranchResponse response = branchService.update(id, request);
+        return ResponseEntity.ok(ApiResponse.success(MessageConstant.SUCCESS_UPDATED, response));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> delete(@PathVariable Integer id) {
+        branchService.delete(id);
+        return ResponseEntity.ok(ApiResponse.success(MessageConstant.SUCCESS_DELETED));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse> getById(@PathVariable Integer id) {
+        BranchResponse response = branchService.getById(id);
+        return ResponseEntity.ok(ApiResponse.success(MessageConstant.SUCCESS_RETRIEVED, response));
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse> getAll() {
+        List<BranchResponse> responses = branchService.getAll();
+        return ResponseEntity.ok(ApiResponse.success(MessageConstant.SUCCESS_RETRIEVED, responses));
+    }
+}

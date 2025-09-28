@@ -1,0 +1,7 @@
+package com.mufid.dto.province;
+
+import lombok.Data;
+
+@Data
+public class ProvinceRequest {
+}

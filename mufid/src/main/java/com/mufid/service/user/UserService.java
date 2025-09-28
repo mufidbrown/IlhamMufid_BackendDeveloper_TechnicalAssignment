@@ -1,0 +1,18 @@
+package com.mufid.service.user;
+
+
+import com.mufid.dto.register.RegisterRequest;
+import com.mufid.dto.user.UserDTO;
+import com.mufid.entity.bean.Role;
+import com.mufid.entity.bean.User;
+
+public interface UserService {
+    User findByEmail(String email);
+    User createUser(RegisterRequest request, Role role);
+    void activateUser(User user);
+    void lockUser(User user);
+    void unlockUser(User user);
+    void incrementLoginAttempt(User user);
+    void resetLoginAttempt(User user);
+    UserDTO convertToDTO(User user);
+}
