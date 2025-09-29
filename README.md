@@ -11,8 +11,31 @@ Proyek ini adalah implementasi backend menggunakan **Java Spring Boot** untuk me
 
 ### 1.1 Clone project dari GitHub saya
 - **git clone https://github.com/mufidbrown/IlhamMufid_BackendDeveloper_TechnicalAssignment.git**
-- **cd repo-name**
-- *Aplikasi saya berjalan di port 8089*
+- **cd repo-name** : sesuaikan dengan nama repository clonningan github.
+- **Mengisi Query SQL dibawah ini 👇 untuk data awal (seeding) ke dalam tabel roles**: Data dasar (master data) yang wajib ada sebelum sistem jalan.
+```yaml
+INSERT INTO roles
+(id, created_at, created_by, is_active, is_deleted, updated_at, updated_by, name, type)
+VALUES
+(1, '2025-07-13 10:00:00', 'system', true, false, '2025-07-13 10:00:00', 'system', 'Super Admin', 0),
+(2, '2025-07-13 10:00:00', 'system', true, false, '2025-07-13 10:00:00', 'system', 'HR Manager', 1),
+(3, '2025-07-13 10:00:00', 'system', true, false, '2025-07-13 10:00:00', 'system', 'HR Staff', 1),
+(4, '2025-07-13 10:00:00', 'system', true, false, '2025-07-13 10:00:00', 'system', 'Finance Officer', 2),
+(5, '2025-07-13 10:00:00', 'system', true, false, '2025-07-13 10:00:00', 'system', 'Area Manager', 3),
+(6, '2025-07-13 10:00:00', 'system', true, false, '2025-07-13 10:00:00', 'system', 'Store Supervisor', 4),
+(7, '2025-07-13 10:00:00', 'system', true, false, '2025-07-13 10:00:00', 'system', 'Store Crew / Kasir', 5),
+(8, '2025-07-13 10:00:00', 'system', true, false, '2025-07-13 10:00:00', 'system', 'IT Support', 6);
+```
+- **Proyek ini mengelola **Master Data** dengan struktur **hierarki** sebagai berikut:**
+  
+Provinsi  
+   ⬇️  
+   Branch (Cabang)  
+       ⬇️  
+       Store (Toko)
+       
+- **Aplikasi saya berjalan di port 8089 : http://localhost:8089**
+
 
 
 
@@ -54,14 +77,11 @@ spring:
     driver-class-name: org.postgresql.Driver
 ```
 
-### 3.3 application-dev.yml
-Buka file `application-dev.yml` dan masukan username serta password untuk bisa koneksikan backend ke database
 
 
 
-
-## Swagger
-> **Access : http://localhost:8089/swagger-ui/index.html**
+## 📖 4. Dokumentasi API (Swagger)
+**🔗 Akses di browser: http://localhost:8089/swagger-ui/index.html**
 
 
 
