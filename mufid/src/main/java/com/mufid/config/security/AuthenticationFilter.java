@@ -49,68 +49,84 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         }
 
         String token = extractToken(request);
+
+        logger.debug("Processing request to: {}", request.getRequestURI());
+        logger.debug("Token extracted: {}", token != null ? "Yes" : "No");
+
         if (token == null) {
+            logger.warn("No token found in request to: {}", request.getRequestURI());
             sendUnauthorizedResponse(response, "Authentication token is missing");
             return;
         }
 
-        if (!tokenService.validateToken(token)) {
-            sendUnauthorizedResponse(response, "Invalid or expired token");
-            return;
-        }
-
         try {
+            if (!tokenService.validateToken(token)) {
+                logger.warn("Token validation failed for token: {}", token.substring(0, Math.min(token.length(), 10)) + "...");
+                sendUnauthorizedResponse(response, "Invalid or expired token");
+                return;
+            }
+
             Token tokenEntity = tokenService.findByToken(token);
 
             if (tokenEntity == null) {
-                logger.warn("Token not found in database: {}", token);
+                logger.warn("Token not found in database");
                 sendUnauthorizedResponse(response, "Token not found");
                 return;
             }
 
             User user = tokenEntity.getUser();
             if (user == null) {
-                logger.warn("Token found but user is null: {}", token);
-                sendUnauthorizedResponse(response, "User not found in token");
+                logger.warn("User not found for token");
+                sendUnauthorizedResponse(response, "User not found");
                 return;
             }
 
             Role role = tokenEntity.getRole();
             if (role == null) {
-                logger.warn("Token found but role is null: {}", token);
-                sendUnauthorizedResponse(response, "Role not assigned to token");
+                logger.warn("Role not found for token");
+                sendUnauthorizedResponse(response, "Role not assigned");
                 return;
             }
 
+            logger.info("Authenticated user: {} with role: {}", user.getEmail(), role.getName());
+
             setAuthentication(user, role, request);
+
             tokenService.updateLastActive(token);
+
             filterChain.doFilter(request, response);
 
         } catch (Exception e) {
-            logger.error("Authentication failed: {}", e.getMessage(), e);
-            sendUnauthorizedResponse(response, "Authentication failed due to server error");
+            logger.error("Authentication error: {}", e.getMessage(), e);
+            sendUnauthorizedResponse(response, "Authentication failed");
         }
     }
 
     private boolean isPublicEndpoint(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.contains("/api/auth/login") ||
-                path.contains("/api/auth/register") ||
-                path.contains("/api/auth/forgot-password") ||
-                path.contains("/api/auth/reset-password") ||
-                path.contains("/api/auth/logout");
+        return path.contains("/api/v1/auth/login") ||
+                path.contains("/api/v1/auth/register") ||
+                path.contains("/api/v1/auth/forgot-password") ||
+                path.contains("/api/v1/auth/reset-password") ||
+                path.contains("/swagger-ui") ||
+                path.contains("/v3/api-docs") ||
+                path.contains("/error");
     }
 
     private String extractToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        return (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer "))
-                ? bearerToken.substring(7)
-                : null;
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 
     private void setAuthentication(User user, Role role, HttpServletRequest request) {
+        // Normalisasi role agar sesuai format Spring Security
+        String normalizedRole = "ROLE_" + role.getName().toUpperCase().replace(" ", "_");
+
         List<GrantedAuthority> authorities = Collections.singletonList(
-                new SimpleGrantedAuthority("ROLE_" + role.getName().toUpperCase())
+                new SimpleGrantedAuthority(normalizedRole)
         );
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
@@ -119,11 +135,14 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        logger.debug("Authentication set for user: {} with authorities: {}", user.getEmail(), authorities);
     }
 
     private void sendUnauthorizedResponse(HttpServletResponse response, String message) throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType("application/json");
-        new ObjectMapper().writeValue(response.getWriter(), new AuthResponse(false, message, null, null));
+        response.setContentType("application/json;charset=UTF-8");
+        new ObjectMapper().writeValue(response.getWriter(),
+                new AuthResponse(false, message, null, null));
     }
 }

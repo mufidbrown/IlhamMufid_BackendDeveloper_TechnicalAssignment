@@ -30,9 +30,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordService passwordService;
 
-//    @Autowired
-//    private UserRoleLogService userRoleLogService;
-
     @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
@@ -49,42 +46,12 @@ public class UserServiceImpl implements UserService {
         user.setLoginAttempt(0);
         user.setLogDate(new Date());
 
-        // Save user
         user = userRepository.save(user);
 
-        // Assign role ke user
         roleService.assignRoleToUser(user, role);
-
-        // Insert log user role ke user_role_logs
-        // Ambil list UserRole yang sudah ter-assign ke user
         List<UserRole> userRoles = user.getUserRoleList();
-//        if (userRoles != null && !userRoles.isEmpty()) {
-//            userRoleLogService.insertList(userRoles, user);
-//        }
-
         return user;
     }
-
-
-/*    @Override
-    public User createUser(RegisterRequest request, Role role) {
-        User user = new User();
-        user.setFullName(request.getFullName());
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordService.encodePassword(request.getPassword()));
-        user.setActive(true);  // Set to false if email confirmation is required
-        user.setLocked(false);
-        user.setLoginAttempt(0);
-        user.setLogDate(new Date());
-
-        // Save user
-        user = userRepository.save(user);
-
-        // Assign role to user
-        roleService.assignRoleToUser(user, role);
-
-        return user;
-    }*/
 
     @Override
     public void activateUser(User user) {

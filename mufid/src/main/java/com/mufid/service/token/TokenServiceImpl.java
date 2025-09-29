@@ -61,7 +61,7 @@ public class TokenServiceImpl implements TokenService {
         }
     }
 
-    @Override
+    /*@Override
     public boolean validateToken(String token) {
         Token tokenEntity = tokenRepository.findByToken(token);
 
@@ -74,6 +74,26 @@ public class TokenServiceImpl implements TokenService {
             return false;
         }
 
+        return true;
+    }*/
+    @Override
+    public boolean validateToken(String token) {
+        Token tokenEntity = tokenRepository.findByToken(token);
+
+        if (tokenEntity == null) {
+            System.out.println("Token tidak ditemukan di DB: " + token);
+            return false;
+        }
+        if (tokenEntity.getLogoutAt() != null) {
+            System.out.println("Token sudah logout: " + tokenEntity);
+            return false;
+        }
+        if (tokenEntity.getExpiredAt() != null && tokenEntity.getExpiredAt().before(new Date())) {
+            System.out.println("Token expired: " + tokenEntity);
+            return false;
+        }
+
+        System.out.println("✅ Token valid: " + tokenEntity);
         return true;
     }
 

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/stores")
+@RequestMapping("/api/v1/stores")
 public class StoreController {
 
     private final StoreService storeService;
@@ -22,7 +22,7 @@ public class StoreController {
         this.storeService = storeService;
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<ApiResponse> create(@RequestBody StoreRequest request) {
         StoreResponse response = storeService.create(request);
         return ResponseEntity.ok(ApiResponse.success(MessageConstant.SUCCESS_CREATED, response));
@@ -46,7 +46,7 @@ public class StoreController {
         return ResponseEntity.ok(ApiResponse.success(MessageConstant.SUCCESS_RETRIEVED, response));
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllActive() {
         List<StoreResponse> response = storeService.getAllActive();
         return ResponseEntity.ok(ApiResponse.success(MessageConstant.SUCCESS_RETRIEVED, response));

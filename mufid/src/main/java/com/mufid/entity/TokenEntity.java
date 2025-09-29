@@ -31,7 +31,9 @@ public abstract class TokenEntity extends BaseEntity implements Serializable {
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     private Role role;
 
-    @Column(name = "token", updatable = false, nullable = false, length = 64)
+//    @Column(name = "token", updatable = false, nullable = false, length = 64)
+    @Column(name = "token", nullable = false, unique = true)
+
     private String token;
 
 
@@ -46,6 +48,11 @@ public abstract class TokenEntity extends BaseEntity implements Serializable {
     @Column(name = "last_active_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastActiveAt;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "expired_at")
+    private Date expiredAt;
+
 
     public String getStatusText() {
         return statusText;
@@ -111,4 +118,11 @@ public abstract class TokenEntity extends BaseEntity implements Serializable {
         this.lastActiveAt = lastActiveAt;
     }
 
+    public Date getExpiredAt() {
+        return expiredAt;
+    }
+
+    public void setExpiredAt(Date expiredAt) {
+        this.expiredAt = expiredAt;
+    }
 }

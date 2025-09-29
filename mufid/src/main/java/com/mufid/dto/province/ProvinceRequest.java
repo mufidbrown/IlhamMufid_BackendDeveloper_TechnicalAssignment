@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 public class ProvinceRequest {
 
-    private Long id;
+    private Integer id;
 
     @NotBlank(message = "Province name is required")
     @Size(max = 100, message = "Province name must not exceed 100 characters")
@@ -28,11 +28,11 @@ public class ProvinceRequest {
     private String createdBy;
     private String updatedBy;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

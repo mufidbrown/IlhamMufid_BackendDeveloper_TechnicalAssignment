@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/masterdatadb
+    url: jdbc:postgresql://localhost:5432/mtdb
     username: postgres
     password: bismillah
     driver-class-name: org.postgresql.Driver
@@ -59,11 +59,35 @@ logging:
 #    CAPTCHA_ENABLE: false
 #    IS_SECURITY_ENABLE: false
 
-#  security:
-#    jwt:
-#      secret: MufidJwtSecretKey1234567890987654321 # ≥32 karakter
-#      expiration: 3600000 # 1 jam dalam ms
-#      refresh-expiration: 86400000 # 1 hari dalam ms
+  security:
+    jwt:
+      secret: MufidJwtSecretKey1234567890987654321 # ≥32 karakter
+      expiration: 3600000 # 1 jam dalam ms
+      refresh-expiration: 86400000 # 1 hari dalam ms
 
 application:
   url: http://localhost:8089
+
+# SpringDoc OpenAPI Configuration
+springdoc:
+  # Path untuk Swagger UI
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    # Sorting operations by method (GET, POST, PUT, DELETE)
+    operations-sorter: method
+    # Sorting tags alphabetically
+    tags-sorter: alpha
+    # Enable try it out by default
+    try-it-out-enabled: true
+    # Filter untuk search
+    filter: true
+    # Display request duration
+    display-request-duration: true
+    # Persist authorization data
+    persist-authorization: true
+
+  # Path untuk OpenAPI JSON/YAML docs
+  api-docs:
+    path: /api-docs
+    enabled: true

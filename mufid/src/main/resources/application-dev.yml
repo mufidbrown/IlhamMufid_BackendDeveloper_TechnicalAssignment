@@ -67,3 +67,27 @@ logging:
 
 application:
   url: http://localhost:8089
+
+# SpringDoc OpenAPI Configuration
+springdoc:
+  # Path untuk Swagger UI
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    # Sorting operations by method (GET, POST, PUT, DELETE)
+    operations-sorter: method
+    # Sorting tags alphabetically
+    tags-sorter: alpha
+    # Enable try it out by default
+    try-it-out-enabled: true
+    # Filter untuk search
+    filter: true
+    # Display request duration
+    display-request-duration: true
+    # Persist authorization data
+    persist-authorization: true
+
+  # Path untuk OpenAPI JSON/YAML docs
+  api-docs:
+    path: /api-docs
+    enabled: true

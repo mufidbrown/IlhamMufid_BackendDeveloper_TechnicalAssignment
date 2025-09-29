@@ -6,12 +6,13 @@ import com.mufid.dto.province.ProvinceRequest;
 import com.mufid.dto.province.ProvinceResponse;
 import com.mufid.service.province.ProvinceService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/provinces")
+@RequestMapping("/api/v1/provinces")
 public class ProvinceController {
 
     private final ProvinceService provinceService;
@@ -20,7 +21,8 @@ public class ProvinceController {
         this.provinceService = provinceService;
     }
 
-    @PostMapping
+    @PreAuthorize("hasAnyRole('HR_MANAGER','HR_STAFF')")
+    @PostMapping("/create")
     public ResponseEntity<ApiResponse> create(@RequestBody ProvinceRequest request) {
         ProvinceResponse response = provinceService.create(request);
         return ResponseEntity.ok(ApiResponse.success(MessageConstant.SUCCESS_CREATED, response));
@@ -44,7 +46,7 @@ public class ProvinceController {
         return ResponseEntity.ok(ApiResponse.success(MessageConstant.SUCCESS_RETRIEVED, response));
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAll() {
         List<ProvinceResponse> responses = provinceService.getAll();
         return ResponseEntity.ok(ApiResponse.success(MessageConstant.SUCCESS_RETRIEVED, responses));

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,10 +22,24 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration {
 
     @Autowired
     private AuthenticationFilter authenticationFilter;
+
+    private static final String[] PUBLIC_ENDPOINTS = {
+            // Swagger UI endpoints
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/v3/api-docs/**",
+            "/api-docs/**",
+            "/swagger-resources/**",
+            "/webjars/**",
+            "/configuration/**",
+            "/api/v1/auth/**",
+            "/error"
+    };
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -37,15 +52,41 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-         /*               .requestMatchers(HttpMethod.POST, "/api/auth/forgot-password").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/reset-password").permitAll()  // <-- tambahkan ini*/
+                        // Public endpoints - tidak perlu autentikasi
+                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+
+                        // Semua endpoint lain butuh autentikasi
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                // Add JWT filter before UsernamePasswordAuthenticationFilter
+                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+
+                // Configure exception handling untuk response JSON yang lebih informatif
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setContentType("application/json;charset=UTF-8");
+                            response.setStatus(401);
+                            response.getWriter().write(
+                                    "{\"success\":false," +
+                                            "\"message\":\"Authentication token is missing or invalid\"," +
+                                            "\"token\":null," +
+                                            "\"user\":null}"
+                            );
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setContentType("application/json;charset=UTF-8");
+                            response.setStatus(403);
+                            response.getWriter().write(
+                                    "{\"success\":false," +
+                                            "\"message\":\"Access denied. Insufficient permissions\"," +
+                                            "\"token\":null," +
+                                            "\"user\":null}"
+                            );
+                        })
+                );
 
         return http.build();
     }
@@ -54,16 +95,16 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOriginPatterns(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
-    // Jika Anda memerlukan AuthenticationManager Bean
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration authConfig) throws Exception {
