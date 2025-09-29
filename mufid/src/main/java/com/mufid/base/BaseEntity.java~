@@ -33,7 +33,7 @@ public abstract class BaseEntity implements Serializable {
 
     @Column(name = "is_deleted")
     @JsonIgnore
-    protected boolean isDeleted;
+    protected Long isDeleted;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -73,11 +73,11 @@ public abstract class BaseEntity implements Serializable {
         isActive = active;
     }
 
-    public Boolean getIsDeleted() {
+    public Long getIsDeleted() {
         return isDeleted;
     }
 
-    public void setIsDeleted(Boolean isDeleted) {
+    public void setIsDeleted(Long isDeleted) {
         this.isDeleted = isDeleted;
     }
 

@@ -21,7 +21,6 @@ public class ProvinceController {
         this.provinceService = provinceService;
     }
 
-    @PreAuthorize("hasAnyRole('HR_MANAGER','HR_STAFF')")
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> create(@RequestBody ProvinceRequest request) {
         ProvinceResponse response = provinceService.create(request);

@@ -107,14 +107,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         return path.contains("/api/v1/auth/login") ||
                 path.contains("/api/v1/auth/register") ||
                 path.contains("/api/v1/auth/forgot-password") ||
-                path.contains("/api/v1/auth/reset-password")
-                || path.contains("/swagger-ui")
-                || path.contains("/v3/api-docs")
-                || path.contains("/api-docs")
-                || path.contains("/swagger-resources")
-                || path.contains("/webjars")
-                || path.contains("/configuration")
-                || path.contains("/error");
+                path.contains("/api/v1/auth/reset-password") ||
+                path.contains("/swagger-ui") ||
+                path.contains("/v3/api-docs") ||
+                path.contains("/error");
     }
 
     private String extractToken(HttpServletRequest request) {

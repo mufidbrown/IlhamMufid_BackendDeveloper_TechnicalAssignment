@@ -1,0 +1,57 @@
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/mtdb?currentSchema=mufid
+    username: A3C01016FFF52B0A5F1B4D390C595A81
+    password: 91425FEA06C46C019F4E2A94E4A18232
+    hikari:
+      poolName: HikariCP-1
+      idleTimeout: 600000 # 10 menit
+      maxLifetime: 1800000 # 30 menit
+      minimumIdle: 10
+      maximumPoolSize: 10
+  servlet:
+    multipart:
+      max-request-size: 25MB
+      max-file-size: 25MB
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    generate-ddl: true
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+  rabbitmq:
+    username: developer
+    host: 10.xyz.xy.ab
+    password: nop4ssword
+    port: 5672
+
+server:
+  port: 8089
+  compression:
+    enabled: true
+    mime-types: text/html, text/xml, text/plain, text/css, text/javascript, application/javascript, application/json, application/xml
+    min-response-size: 2KB
+  http2:
+    enabled: true
+  server-header: MuFID
+  servlet:
+    session:
+      timeout: 30m
+
+logging:
+  file:
+    name: log/app.log
+  level:
+    ROOT: ERROR
+    org:
+      com.app: ERROR
+    com:
+      zaxxer:
+        hikari.HikariConfig: DEBUG

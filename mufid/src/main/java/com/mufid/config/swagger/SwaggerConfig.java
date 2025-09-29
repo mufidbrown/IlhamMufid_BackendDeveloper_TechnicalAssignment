@@ -35,8 +35,8 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("Order Produk API - Technical Test")
-                .description("API Documentation untuk Technical Test Ilham Mufid Backend Developer")
+                .title("MDMS API - Master Data Management System")
+                .description("API Documentation - Technical Test Ilham Mufid Backend Developer")
                 .version("1.0.0")
                 .contact(new Contact()
                         .name("Ilham Mufid")
