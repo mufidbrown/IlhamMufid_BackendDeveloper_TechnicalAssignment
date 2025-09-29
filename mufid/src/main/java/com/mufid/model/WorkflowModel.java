@@ -1,0 +1,197 @@
+package com.mufid.model;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+
+public class WorkflowModel {
+    private String workflowCode;
+    private String workflowName;
+    private String description;
+    private String currentStep;
+    private String status; // PENDING, IN_PROGRESS, APPROVED, REJECTED, CANCELLED
+    private String priority; // LOW, MEDIUM, HIGH, URGENT
+    private Long initiatorId;
+    private String initiatorName;
+    private Long currentApproverId;
+    private String currentApproverName;
+    private LocalDateTime initiatedAt;
+    private LocalDateTime lastActionAt;
+    private LocalDateTime completedAt;
+    private LocalDateTime dueDate;
+    private String comments;
+    private Map<String, Object> formData;
+    private List<WorkflowStepModel> steps;
+    private String category; // LEAVE, EXPENSE, OVERTIME, etc.
+    private String referenceId;
+    private String referenceType;
+    private Boolean isUrgent;
+    private String rejectionReason;
+
+    public WorkflowModel() {
+        this.initiatedAt = LocalDateTime.now();
+        this.status = "PENDING";
+        this.priority = "MEDIUM";
+        this.isUrgent = false;
+    }
+
+    public WorkflowModel(String workflowCode, String workflowName, Long initiatorId) {
+        this();
+        this.workflowCode = workflowCode;
+        this.workflowName = workflowName;
+        this.initiatorId = initiatorId;
+    }
+
+    // Builder pattern methods
+    public WorkflowModel workflow(String workflowCode, String workflowName) {
+        this.workflowCode = workflowCode;
+        this.workflowName = workflowName;
+        return this;
+    }
+
+    public WorkflowModel initiator(Long initiatorId, String initiatorName) {
+        this.initiatorId = initiatorId;
+        this.initiatorName = initiatorName;
+        return this;
+    }
+
+    public WorkflowModel currentApprover(Long currentApproverId, String currentApproverName) {
+        this.currentApproverId = currentApproverId;
+        this.currentApproverName = currentApproverName;
+        return this;
+    }
+
+    public WorkflowModel status(String status) {
+        this.status = status;
+        return this;
+    }
+
+    public WorkflowModel priority(String priority) {
+        this.priority = priority;
+        return this;
+    }
+
+    public WorkflowModel category(String category) {
+        this.category = category;
+        return this;
+    }
+
+    public WorkflowModel reference(String referenceId, String referenceType) {
+        this.referenceId = referenceId;
+        this.referenceType = referenceType;
+        return this;
+    }
+
+    public WorkflowModel dueDate(LocalDateTime dueDate) {
+        this.dueDate = dueDate;
+        return this;
+    }
+
+    public WorkflowModel urgent(Boolean isUrgent) {
+        this.isUrgent = isUrgent;
+        return this;
+    }
+
+    public WorkflowModel formData(Map<String, Object> formData) {
+        this.formData = formData;
+        return this;
+    }
+
+    public WorkflowModel steps(List<WorkflowStepModel> steps) {
+        this.steps = steps;
+        return this;
+    }
+
+    // Utility methods
+    public boolean isPending() {
+        return "PENDING".equalsIgnoreCase(status);
+    }
+
+    public boolean isInProgress() {
+        return "IN_PROGRESS".equalsIgnoreCase(status);
+    }
+
+    public boolean isCompleted() {
+        return "APPROVED".equalsIgnoreCase(status) || "REJECTED".equalsIgnoreCase(status);
+    }
+
+    public boolean isOverdue() {
+        return dueDate != null && LocalDateTime.now().isAfter(dueDate) && !isCompleted();
+    }
+
+    public boolean isUrgentOrOverdue() {
+        return isUrgent || isOverdue();
+    }
+
+    public long getDaysRemaining() {
+        if (dueDate == null || isCompleted()) return 0;
+        return java.time.temporal.ChronoUnit.DAYS.between(LocalDateTime.now(), dueDate);
+    }
+
+    // Getters and Setters
+    public String getWorkflowCode() { return workflowCode; }
+    public void setWorkflowCode(String workflowCode) { this.workflowCode = workflowCode; }
+
+    public String getWorkflowName() { return workflowName; }
+    public void setWorkflowName(String workflowName) { this.workflowName = workflowName; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public String getCurrentStep() { return currentStep; }
+    public void setCurrentStep(String currentStep) { this.currentStep = currentStep; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public String getPriority() { return priority; }
+    public void setPriority(String priority) { this.priority = priority; }
+
+    public Long getInitiatorId() { return initiatorId; }
+    public void setInitiatorId(Long initiatorId) { this.initiatorId = initiatorId; }
+
+    public String getInitiatorName() { return initiatorName; }
+    public void setInitiatorName(String initiatorName) { this.initiatorName = initiatorName; }
+
+    public Long getCurrentApproverId() { return currentApproverId; }
+    public void setCurrentApproverId(Long currentApproverId) { this.currentApproverId = currentApproverId; }
+
+    public String getCurrentApproverName() { return currentApproverName; }
+    public void setCurrentApproverName(String currentApproverName) { this.currentApproverName = currentApproverName; }
+
+    public LocalDateTime getInitiatedAt() { return initiatedAt; }
+    public void setInitiatedAt(LocalDateTime initiatedAt) { this.initiatedAt = initiatedAt; }
+
+    public LocalDateTime getLastActionAt() { return lastActionAt; }
+    public void setLastActionAt(LocalDateTime lastActionAt) { this.lastActionAt = lastActionAt; }
+
+    public LocalDateTime getCompletedAt() { return completedAt; }
+    public void setCompletedAt(LocalDateTime completedAt) { this.completedAt = completedAt; }
+
+    public LocalDateTime getDueDate() { return dueDate; }
+    public void setDueDate(LocalDateTime dueDate) { this.dueDate = dueDate; }
+
+    public String getComments() { return comments; }
+    public void setComments(String comments) { this.comments = comments; }
+
+    public Map<String, Object> getFormData() { return formData; }
+    public void setFormData(Map<String, Object> formData) { this.formData = formData; }
+
+    public List<WorkflowStepModel> getSteps() { return steps; }
+    public void setSteps(List<WorkflowStepModel> steps) { this.steps = steps; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+
+    public String getReferenceId() { return referenceId; }
+    public void setReferenceId(String referenceId) { this.referenceId = referenceId; }
+
+    public String getReferenceType() { return referenceType; }
+    public void setReferenceType(String referenceType) { this.referenceType = referenceType; }
+
+    public Boolean getIsUrgent() { return isUrgent; }
+    public void setIsUrgent(Boolean isUrgent) { this.isUrgent = isUrgent; }
+
+    public String getRejectionReason() { return rejectionReason; }
+    public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
+}
